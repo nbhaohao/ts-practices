@@ -22,6 +22,7 @@ function _extend(parentClass, subClass) {
 }
 
 // 使用封装的继承函数来实现
+// 可以使用 Man.prototype = Object.create(Person.prototype) 代替
 Man.prototype = _extend(Person, Man);
 const man = new Man(["play"], "王五", 19);
 const person = new Person("zz", 18);
