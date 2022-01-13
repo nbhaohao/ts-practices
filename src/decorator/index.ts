@@ -15,8 +15,14 @@ function TestMethod(
   };
 }
 
+function TestField(targetClass: any, fieldName: string) {
+  console.log("targetClass", targetClass);
+  console.log("fieldName", fieldName);
+}
+
 // @FirstClassDecorator
 class CustomService {
+  @TestField
   name: string = "下单";
   @TestMethod
   buy() {
