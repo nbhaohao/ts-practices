@@ -1,10 +1,17 @@
 import { Inject } from "./InjectDecorator";
 import { UserService } from "./UserService";
+import { RequestMethodDecorator } from "./RequestMethodDecorator";
+import { ControllerDecorator } from "./ControllerDecorator";
 
+@ControllerDecorator
 class Controller {
-  @Inject("userService")
-  private userService?: UserService;
+  constructor(
+    @Inject("userService") private userService?: UserService,
+    // @ts-ignore
+    private count: string
+  ) {}
 
+  @RequestMethodDecorator("/login")
   public login() {}
 }
 

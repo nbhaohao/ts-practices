@@ -1,8 +1,11 @@
 import "reflect-metadata";
-function Inject(serviceName: string): PropertyDecorator {
-  return (target, fieldName) => {
+function Inject(serviceName: string): ParameterDecorator {
+  return (target, fieldName, parameterIndex) => {
     console.log("target", target);
-    console.log(Reflect.getMetadata("design:type", target, fieldName));;
+    const allDecorators = Reflect.getMetadata("design:paramtypes", target);
+    const type = new allDecorators[parameterIndex]();
+    console.log("allDecorators", allDecorators);
+    console.log("user inject type", type);
   };
 }
 
