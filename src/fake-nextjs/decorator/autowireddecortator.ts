@@ -1,32 +1,31 @@
 import "reflect-metadata";
-import collectionInstance from "../collection";
 
 type MyPropDecorator = (
   targetClassPrototype: any,
   propertyKey: string | symbol
 ) => void;
-export default function Autowired(
-  injectId: string,
-  singleton: boolean = false
-): MyPropDecorator {
+export default function Autowired(injectId: string): MyPropDecorator {
   return (targetClassPrototype, propertyKey) => {
+    let PropServiceImplementInstance: any;
     // PropClass=UserService类
     const PropServiceImplementClass = Reflect.getMetadata(
-      "design:type",
+      "propClassInstance",
       targetClassPrototype,
       propertyKey
     );
-    const propClass = PropServiceImplementClass.getServiceImplementClass();
-    let propClassInstance;
-    if (singleton) {
-      propClassInstance = propClass.getInstance();
+    const metaSingleton = Reflect.getMetadata(
+      "singleton",
+      targetClassPrototype,
+      propertyKey
+    );
+    if (metaSingleton) {
+      PropServiceImplementInstance = PropServiceImplementClass;
     } else {
-      propClassInstance = new propClass();
+      PropServiceImplementInstance = new PropServiceImplementClass();
     }
-    // collectionInstance.set(propertyKey, PropClassInstance);
     //  增加....
     Reflect.defineProperty(targetClassPrototype, propertyKey, {
-      value: propClassInstance,
+      value: PropServiceImplementInstance,
     });
   };
 }
