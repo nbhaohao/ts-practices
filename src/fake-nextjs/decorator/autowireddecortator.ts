@@ -5,7 +5,10 @@ type MyPropDecorator = (
   targetClassPrototype: any,
   propertyKey: string | symbol
 ) => void;
-export default function Autowired(injectId: string): MyPropDecorator {
+export default function Autowired(
+  injectId: string,
+  singleton: boolean = false
+): MyPropDecorator {
   return (targetClassPrototype, propertyKey) => {
     // PropClass=UserService类
     const PropServiceImplementClass = Reflect.getMetadata(
@@ -13,12 +16,17 @@ export default function Autowired(injectId: string): MyPropDecorator {
       targetClassPrototype,
       propertyKey
     );
-    const PropClassInstance =
-      new (PropServiceImplementClass.getServiceImplementClass())();
+    const propClass = PropServiceImplementClass.getServiceImplementClass();
+    let propClassInstance;
+    if (singleton) {
+      propClassInstance = propClass.getInstance();
+    } else {
+      propClassInstance = new propClass();
+    }
     // collectionInstance.set(propertyKey, PropClassInstance);
     //  增加....
     Reflect.defineProperty(targetClassPrototype, propertyKey, {
-      value: PropClassInstance,
+      value: propClassInstance,
     });
   };
 }
